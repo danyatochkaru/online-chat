@@ -5,7 +5,7 @@ export default function MainPage() {
 		<main>
 			<Link
 				href={{
-					pathname: "/chat/" + Math.floor(Math.random() * 9999),
+					pathname: "/chats",
 				}}
 			>
 				Go chat

@@ -1,0 +1,109 @@
+.wrapper {
+	@apply h-screen w-screen flex justify-center shadow-2xl;
+
+	.flex_v_center {
+		@apply flex items-center gap-x-1;
+	}
+
+	.title {
+		@apply text-lg font-bold;
+	}
+
+	button,
+	.btn {
+		@apply border border-light-blue bg-light-blue text-white py-1 px-2 rounded transition-colors;
+
+		&:hover {
+			@apply bg-accent border-accent;
+		}
+
+		&.outline {
+			@apply bg-transparent text-black;
+
+			&:hover {
+				@apply bg-light-blue text-light border-light-blue;
+			}
+		}
+
+		&.danger {
+			&:hover {
+				@apply bg-red text-light border-red;
+			}
+		}
+	}
+
+	.info {
+		@apply w-full flex gap-2;
+	}
+
+	.cont {
+		@apply container mx-auto rounded-xl flex flex-row self-center bg-white;
+
+		.sidebar {
+			@apply flex flex-col p-5 border-r-2 border-light-blue w-72 bg-light rounded-s-xl;
+
+			.account {
+				@apply mt-auto flex-col;
+			}
+
+			.btn {
+				@apply flex justify-center w-full;
+			}
+		}
+
+		.chat {
+			@apply p-5 w-full flex flex-col gap-y-4;
+
+			.messages {
+				@apply h-[80vh] overflow-auto flex flex-col gap-y-4 pr-2;
+
+				.item {
+					@apply w-fit sm:max-w-[80%] self-start;
+
+					.text {
+						@apply p-2 w-fit rounded-xl whitespace-break-spaces bg-accent text-light rounded-bl-none;
+					}
+
+					.info {
+						.author {
+							@apply text-sm font-medium;
+						}
+
+						time {
+							@apply opacity-70 text-sm ml-auto;
+						}
+					}
+
+					&.self {
+						@apply self-end;
+
+						.text {
+							@apply bg-light text-black rounded-br-none border border-accent;
+						}
+					}
+				}
+			}
+
+			.input {
+				@apply w-full flex;
+
+				.text {
+					@apply flex-1 outline-none border border-light-blue border-r-0 p-2 rounded-s transition-colors;
+
+					&:hover,
+					&:focus {
+						@apply bg-light;
+					}
+
+					&:focus {
+						@apply border-accent;
+					}
+				}
+
+				.send_btn {
+					@apply rounded-s-none;
+				}
+			}
+		}
+	}
+}

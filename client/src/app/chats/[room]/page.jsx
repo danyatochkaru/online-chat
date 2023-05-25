@@ -1,8 +1,9 @@
-"use client";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 
-export default function ChatRoomPage() {
+import s from "./style.module.scss";
+import classNames from "classnames";
+
+const getData = async () => {
 	const MESSAGES = [
 		{
 			id: "1",
@@ -51,8 +52,13 @@ export default function ChatRoomPage() {
 		id: "3",
 		username: "Admin",
 	};
+	const online = Math.floor(Math.random() * 555);
+	return { online, account: ME, messages: MESSAGES };
+};
 
-	const params = useParams();
+export default async function ChatRoomPage({ params }) {
+	const { room } = params;
+	const { account, messages, online } = await getData();
 	const COLORS = [
 		"#996633",
 		"#993300",
@@ -68,61 +74,65 @@ export default function ChatRoomPage() {
 		"#009966",
 		"#339900",
 	];
-	const online = 123;
 
 	return (
-		<main className="h-screen w-screen flex justify-center shadow-2xl">
-			<div className="container mx-auto rounded-xl flex flex-row self-center bg-white">
-				<div className="flex flex-col p-5 border-r-2 border-[#939cc3] w-72 bg-[#F7F8F8] rounded-s-xl">
-					<h3 className="text-lg font-bold">Онлайн чат</h3>
+		<main className={s.wrapper}>
+			<div className={s.cont}>
+				<div className={s.sidebar}>
+					<h3 className={s.title}>Онлайн чат</h3>
 					<p>
 						Онлайн: <span>{online}</span>
 					</p>
-					<div className="flex items-center gap-x-1">
+					<div className={s.flex_v_center}>
 						<p>Код комнаты</p>
-						<p className="cursor-pointer outline-none border border-[#939cc3] py-1 px-2 rounded transition-colors hover:bg-[#939cc3] hover:text-[#F7F8F8]">
-							#{params?.room}
-						</p>
+						<button className={s.outline}>#{room}</button>
 					</div>
-					<div className="mt-auto w-full flex flex-col gap-y-2">
-						<div className="flex gap-x-1 items-center">
+					<div className={classNames(s.info, s.account)}>
+						<div className={s.flex_v_center}>
 							Вы вошли как
-							<h4 className="font-medium">{ME.username}</h4>
+							<h4 className="font-medium">{account.username}</h4>
 						</div>
 						<Link
+							href={"/chats"}
+							className={classNames(s.btn, s.outline)}
+						>
+							К списку чатов
+						</Link>
+						<Link
 							href={"/"}
-							className="flex justify-center w-full border border-[#939cc3] py-1 px-2 rounded transition-colors hover:bg-[#f44336] hover:text-[#F7F8F8] hover:border-[#f44336]"
+							className={classNames(
+								s.logout_btn,
+								s.btn,
+								s.outline,
+								s.danger
+							)}
 						>
 							Выйти
 						</Link>
 					</div>
 				</div>
-				<div className="p-5 w-full flex flex-col gap-y-4">
-					<div className="h-[80vh] overflow-auto flex flex-col gap-y-4">
-						{MESSAGES.map((item) => (
+				<div className={s.chat}>
+					<div className={s.messages}>
+						{messages.map((item) => (
 							<div
 								key={item.id}
-								className={`w-fit sm:max-w-[80%] ${
-									item.author.id == ME.id
-										? "self-end"
-										: "self-start"
-								}`}
+								className={classNames(s.item, {
+									[s.self]: item.author.id == account.id,
+								})}
 							>
 								<p
-									className={`p-2 w-fit rounded-xl whitespace-break-spaces ${
-										item.author.id == ME.id
-											? "bg-[#F7F8F8] text-black rounded-br-none border border-[#3650a4]"
-											: "bg-[#3650a4] text-[#F7F8F8] rounded-bl-none"
-									}`}
+									className={classNames(s.text, {
+										[s.self]: item.author.id == account.id,
+									})}
 								>
 									{item.text}
 								</p>
-								<div className="w-full px-2 flex gap-x-2">
+								<div className={s.info}>
 									<h5
-										className="text-sm font-medium"
+										className={s.author}
 										style={{
 											color:
-												item.author.id == ME.id
+												item.author.id == account.id
 													? "inherit"
 													: COLORS[
 															item.author.id.charCodeAt() %
@@ -130,11 +140,11 @@ export default function ChatRoomPage() {
 													  ],
 										}}
 									>
-										{item.author.id == ME.id
+										{item.author.id == account.id
 											? "Вы"
 											: item.author.username}
 									</h5>
-									<time className="opacity-70 text-sm ml-auto">
+									<time>
 										{item.date.toLocaleTimeString("ru", {
 											timeStyle: "short",
 										})}
@@ -143,12 +153,9 @@ export default function ChatRoomPage() {
 							</div>
 						))}
 					</div>
-					<form className="w-full flex">
-						<input
-							className="flex-1 outline-none border border-[#939cc3] border-r-0 p-2 rounded-s transition-colors focus:border-[#3650a4] hover:bg-[#F7F8F8] focus:bg-[#F7F8F8]"
-							placeholder="Сообщение"
-						/>
-						<button className="border border-[#939cc3] bg-[#939cc3] text-white p-2 rounded-e transition-colors hover:bg-[#3650a4] hover:border-[#3650a4]">
+					<form className={s.input}>
+						<input className={s.text} placeholder="Сообщение" />
+						<button className={classNames(s.send_btn)}>
 							Отправить
 						</button>
 					</form>
